@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BossMove : MonoBehaviour
 {
-    public float moveSpeed = 2f;
+    public float moveSpeed = 4f;
     public float moveDistance = 5.5f;
 
     private Vector3 originalPosition;
@@ -38,6 +38,13 @@ public class BossMove : MonoBehaviour
                 movingUp = true;
             }
         }
+    }
+
+    public void StopMovement()
+    {
+        // 보스 움직임을 멈추는 로직
+        movingUp = false; // 움직임을 멈추고
+        // 움직임에 대한 추가 로직이 있다면 여기에 추가
     }
 
     public void MoveBulletToTarget(Transform bulletTransform, Transform target)

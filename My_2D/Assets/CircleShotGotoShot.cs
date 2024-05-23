@@ -15,13 +15,8 @@ namespace Shot
         // 총알 발사 위치를 설정할 프리팹의 로컬 좌표
         public Vector3 BulletSpawnOffset;
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.X))
-                Shot();
-        }
 
-        private void Shot()
+        public void Shot()
         {
             // Target 방향으로 발사될 총알 수록
             List<Transform> bullets = new List<Transform>();
@@ -33,7 +28,7 @@ namespace Shot
                 GameObject temp = Instantiate(BulletPrefab);
 
                 // 일정 시간 후 삭제
-                Destroy(temp, 2f);
+                Destroy(temp, 4f);
 
                 // 프리팹의 로컬 좌표를 부모 객체의 위치를 기준으로 설정하여 발사 위치 조정
                 temp.transform.position = transform.position + transform.TransformDirection(BulletSpawnOffset);

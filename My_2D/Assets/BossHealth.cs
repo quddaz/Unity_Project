@@ -1,67 +1,65 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class BossHealth : MonoBehaviour
 {
-    public int maxHealth = 200; // 최대 체력
-    private int currentHealth = 200;   // 현재 체력
+    public GameObject BulletPrefab;
+    public Vector3 BulletSpawnOffset;
+    public int maxHealth = 200;
+    private int currentHealth;
+    public UnityAction OnHealthChanged;
+    public Slider healthSlider;
 
-    public UnityAction OnHealthChanged; // 체력이 변경될 때 호출할 이벤트
-
-    public Slider healthSlider; // 연결할 UI Slider
+    private BossMove bossMove; // BossMove 스크립트의 참조
 
     private void Start()
     {
-        currentHealth = maxHealth; // 게임 시작 시 최대 체력으로 초기화
-
-        // healthSlider를 Scene에서 찾아서 할당
+        currentHealth = maxHealth;
         healthSlider = GameObject.FindWithTag("BossHealthSlider").GetComponent<Slider>();
-
-        // 보스 체력 UI 초기화
+        bossMove = GetComponent<BossMove>(); // BossMove 스크립트를 찾아서 할당
         UpdateHealthSlider();
     }
 
-    // 피해를 입는 메서드
     public void TakeDamage(int damageAmount)
     {
-        currentHealth -= damageAmount; // 현재 체력에서 피해만큼 감소
-
-        // 체력이 0 이하로 떨어지면 사망 처리
+        currentHealth -= damageAmount;
         if (currentHealth <= 0)
         {
-            Die(); // 사망 처리 메서드 호출
+            Die();
         }
-
-        // 체력이 변경되었음을 알리는 이벤트 호출
         if (OnHealthChanged != null)
         {
             OnHealthChanged.Invoke();
         }
-
-        // 체력 UI 업데이트
         UpdateHealthSlider();
     }
 
-    // 보스 사망 처리 메서드
     private void Die()
     {
-        Debug.Log("Boss is defeated!");
-        // 보스가 죽었을 때 필요한 처리를 여기에 추가 (예: 애니메이션 재생, 게임 오버 등)
-        Destroy(gameObject); // 보스 오브젝트 파괴 (혹은 비활성화 등)
+        // 움직임 멈추기
+        if (bossMove != null)
+        {
+            bossMove.StopMovement();
+        }
+
+        InvokeRepeating("Shoot", 0f, 0.1f); // Shoot 메서드를 0.1초 간격으로 반복 실행
+        Destroy(gameObject, 1f); // 보스 오브젝트 파괴
     }
 
-    // 현재 체력을 반환하는 Getter 메서드
-    public int CurrentHealth
-    {
-        get { return currentHealth; }
-    }
-
-    // 체력 슬라이더 업데이트 메서드
     private void UpdateHealthSlider()
     {
-        // 현재 체력을 슬라이더 값으로 설정 (0 ~ 1 사이 값으로 변환)
         float healthRatio = (float)currentHealth / maxHealth;
         healthSlider.value = healthRatio;
+    }
+
+    private void Shoot()
+    {
+        GameObject temp = Instantiate(BulletPrefab);
+        temp.transform.position = transform.position + transform.TransformDirection(BulletSpawnOffset);
+        float randomZRotation = Random.Range(0f, 360f);
+        temp.transform.rotation = Quaternion.Euler(0f, 0f, randomZRotation);
+        Destroy(temp, 0.5f); // 총알 생성 후 0.5초 후에 삭제
     }
 }

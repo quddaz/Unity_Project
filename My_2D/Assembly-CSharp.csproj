@@ -55,10 +55,12 @@
   <ItemGroup>
      <Compile Include="Assets\BossHealth.cs" />
      <Compile Include="Assets\BossMove.cs" />
+     <Compile Include="Assets\BossPatten.cs" />
      <Compile Include="Assets\Bullet\BossBullet.cs" />
+     <Compile Include="Assets\Bullet\BossDeathEffect.cs" />
      <Compile Include="Assets\Bullet\Bullet.cs" />
-     <Compile Include="Assets\Bullet\CircleShotGotoShot.cs" />
      <Compile Include="Assets\Bullet\SpinShot.cs" />
+     <Compile Include="Assets\CircleShotGotoShot.cs" />
      <Compile Include="Assets\PlayerAttack.cs" />
      <Compile Include="Assets\PlayerController.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
