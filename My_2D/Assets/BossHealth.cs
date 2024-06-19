@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BossHealth : MonoBehaviour
@@ -11,7 +12,6 @@ public class BossHealth : MonoBehaviour
     private int currentHealth;
     public UnityAction OnHealthChanged;
     public Slider healthSlider;
-
     private BossMove bossMove; // BossMove 스크립트의 참조
 
     private void Start()
@@ -45,7 +45,7 @@ public class BossHealth : MonoBehaviour
         }
 
         InvokeRepeating("Shoot", 0f, 0.1f); // Shoot 메서드를 0.1초 간격으로 반복 실행
-        Destroy(gameObject, 1f); // 보스 오브젝트 파괴
+        Invoke("LoadMainUIScene", 2f);
     }
 
     private void UpdateHealthSlider()
@@ -53,7 +53,10 @@ public class BossHealth : MonoBehaviour
         float healthRatio = (float)currentHealth / maxHealth;
         healthSlider.value = healthRatio;
     }
-
+    private void LoadMainUIScene()
+    {
+        SceneManager.LoadScene("main ui");
+    }
     private void Shoot()
     {
         GameObject temp = Instantiate(BulletPrefab);
